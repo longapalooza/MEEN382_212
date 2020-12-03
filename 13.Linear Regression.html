@@ -13415,6 +13415,177 @@ $$ R = -281.0 T + 18874.5 $$
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Measure-of-Fitness"><u><span id="measure_of_fitness">Measure of Fitness</span></u><a class="anchor-link" href="#Measure-of-Fitness">¶</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Once a linear fit has been made, the question should be asked, "How good is the fit?" It may be imagined that different regressions will produce slightly different fits, and thus, one fit will likely be better than another. One might try to compare different fits visually and make a judgment that way. However, as an engineer, we should not be satisfied with doing something so haphazard. We must, whenever possible, make our decisions based on quantitative data. The quantitative data that is needed here is known as the coefficient of determination or correlation coefficient. The coefficient of determination of a regression is probably most commonly known as the $ R^2 $ value of the fit. The $ R^2 $ value is given by</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+$$ R^2 = 1 - \frac{\Sigma \left( y_i - \hat{y} \right)^2}{\Sigma \left( y_i - \bar{y} \right)^2} $$
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>where $ y_i $ is the dependent data value for each data point, $ \bar{y} $ is the average of all the dependent data points, and $ \hat{y} $ is the predicted $ y $ value for a given independent data value for each data point. $ \hat{y} $ is the $ y $ value as given by the particular fit of the regression. The coefficient of determination may be calculated as a function in Python. This function is shown below.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [8]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">statistics</span>
+
+<span class="k">def</span> <span class="nf">coeff_of_determination</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ybar</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
+        <span class="n">num</span> <span class="o">+=</span> <span class="p">(</span><span class="n">ys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">denom</span> <span class="o">+=</span> <span class="p">(</span><span class="n">ys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">ybar</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">R2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">num</span><span class="o">/</span><span class="n">denom</span>
+    <span class="k">return</span> <span class="n">R2</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The statistics library must first be imported to use the function defined above. The statistics library is a built-in library, so there is no need to install it separately. The library was installed when Python was installed. The second thing that must be done before the <code>coeff_of_determination</code> function may be used is the regression fit must be defined as a Python function. The regression fit from the previous example (the temperature and resistance values) is defined as a Python function below.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [9]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">my_fit</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">linear_coeffs</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span>
+    <span class="k">return</span> <span class="n">y</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The coefficient of determination may now be determined for this fit. The $ R^2 $ value of the fit is shown below.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [10]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">coeff_of_determination</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">my_fit</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0.9583382961789092
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This $ R^2 $ value may now be used to compare different regression fits to see which one is the best. The $ R^2 $ may range from -1 to 1, where a value of 1 is considered a "perfect" fit. In practice, a value of 1 may never be achieved because no data set is perfect. Caution must be given to taking this number at face value, though. When comparing $ R^2 $ values of regressions that take different forms (e.g., $ f_1 = \beta_0 + \beta_1 x $ versus $ f_2 = \beta_0 + \beta_1 x + \beta_2 x^2 $), the regression that has more terms will likely have the higher $ R_2 $ value. This effect may be clearly be seen using the data set shown Table 2.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div style="text-align: center;">
+Table 2: Recycling Data
+    <table>
+<tr><td>Year</td><td>Recycling ($ \frac{lbm}{person\ day} $)</td></tr>
+<tr><td>1960</td><td>0.16</td></tr>
+<tr><td>1970</td><td>0.70</td></tr>
+<tr><td>1980</td><td>0.38</td></tr>
+<tr><td>1990</td><td>1.04</td></tr>
+<tr><td>2009</td><td>1.25</td></tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The data set shows the number of pounds of recycled material per person per day of the given years. A regression fit may be performed where the fit's general form is linear, quadratic, cubic, and quartic (4th order). The $ R^2 $ values of the fits are summarized in the table below.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div style="text-align: center;">
+Table 3: Coefficient of Determination Values
+    <table>
+<tr><td>General Form</td><td>$ R^2 $</td></tr>
+<tr><td>$$ \beta_0 + \beta_1 x $$</td><td>0.7830</td></tr>
+<tr><td>$$ \beta_0 + \beta_1 x + \beta_2 x^2 $$</td><td>0.7844</td></tr>
+<tr><td>$$ \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 $$</td><td>0.7847</td></tr>
+<tr><td>$$ \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \beta_4 x^4 $$</td><td>1</td></tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Studying Table 3, one may conclude that the quartic fit is the best. After some thought, the value of 1 for the quartic case should come as no surprise when considering the number of points it takes to draw different polynomials. For a line, it takes two points; for a parabola, it takes three points; For a cubic function, it takes four points; and for a quartic function, it takes five points. Since the data set has five points, the quartic function will be a "perfect" fit. However, this is misleading because the $ R^2 $ of different forms are being compared. It is essentially comparing an apple to an orange. A new metric must be introduced to compare an apple to an apple. The adjusted coefficient of determination (or $ R^2_{adj} $) does just that. The adjusted coefficient of determination considers the number of data points in the data set and the number of coefficients used for the fit. The adjusted coefficient of determination is given by</p>
+$$ R^2_{adj} = 1 - \left( 1 - R^2 \right) \frac{n - 1}{n - p} $$<p>where $ n $ is the number of data points in the data set, and $ p $ is the number of coefficients used in the regression. Table 4 shows the $ R^2_{adj} $ for the different forms.</p>
+<div style="text-align: center;">
+Table 4: Adjusted Coefficient of Determination Values
+    <table>
+<tr><td>General Form</td><td>$ p $</td><td>$ R^2 $</td><td>$ R^2_{adj} $</td></tr>
+<tr><td>$$ \beta_0 + \beta_1 x $$</td><td>2</td><td>0.7830</td><td>0.7106</td></tr>
+<tr><td>$$ \beta_0 + \beta_1 x + \beta_2 x^2 $$</td><td>3</td><td>0.7844</td><td>0.5687</td></tr>
+<tr><td>$$ \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 $$</td><td>4</td><td>0.7847</td><td>0.1389</td></tr>
+<tr><td>$$ \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \beta_4 x^4 $$</td><td>5</td><td>1</td><td>Division by zero!</td></tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>From the $ R^2_{adj} $ values, it may now clearly be seen which fit is the best, which is the linear fit.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <hr/>
 <hr/>
 <p><a download="" href="./13.Linear Regression.py">Download Complete Python Script Here</a></p>
