@@ -65,3 +65,34 @@ print(linear_coeffs(R, T))
 
 print(linear_coeffs(T, R))
 
+
+# In[8]:
+
+
+import statistics
+
+def coeff_of_determination(xs, ys, f):
+    num = 0
+    denom = 0
+    ybar = statistics.mean(ys)
+    for i, x in enumerate(xs):
+        num += (ys[i] - f(x))**2
+        denom += (ys[i] - ybar)**2
+    R2 = 1 - num/denom
+    return R2
+
+
+# In[9]:
+
+
+def my_fit(x):
+    B = linear_coeffs(R, T)
+    y = B[0] + B[1]*x
+    return y
+
+
+# In[10]:
+
+
+print(coeff_of_determination(R, T, my_fit))
+
