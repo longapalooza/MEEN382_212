@@ -4,7 +4,7 @@
 # In[1]:
 
 
-f = open("cfb_school_standings_2019.csv").read()
+f = open("datasets/cfb_school_standings_2019.csv").read()
 
 
 # In[2]:
