@@ -81,7 +81,6 @@ for i, ppg in enumerate(ppgs):
     if ppg > max_value:
         max_value = ppg
         index_of_max = i
-    i += 1
 
 print(max_value)
 print(index_of_max)
@@ -106,7 +105,6 @@ for i, ppg in enumerate(ppgs):
     if ppg < min_value:
         min_value = ppg
         index_of_min = i
-    i += 1
 
 print(min_value)
 print(index_of_min)
