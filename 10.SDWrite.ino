@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include <SD.h>
 
-const int CS1=10;
+const int CS1=8;
 
 void setup() {
   // Open serial communications and wait for port to open:
