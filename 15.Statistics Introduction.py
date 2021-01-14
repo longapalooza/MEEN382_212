@@ -32,7 +32,7 @@ birthday_paradox(47)
 # In[5]:
 
 
-filename = './data/exam_grades.csv'
+filename = './datasets/exam_grades.csv'
 
 
 # In[6]:
